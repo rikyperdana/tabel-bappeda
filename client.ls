@@ -4,12 +4,11 @@ if Meteor.isClient
 		layout: (content) ->
 			view: -> m \div,
 				m \.navbar-fixed, m \nav.green, m \.nav-wrapper,
-					m \a.brand-logo.center, 'Daftar Tabel'
+					m \a.brand-logo.center, 'Konten Tabel'
 					m \ul.right,
 						m \li, m \a, \Login
-						m \li, m \a, \Register
 				m \ul.fixed.side-nav,
-					m \li.grey.lighten-2, m \a.center, m \b, 'Menu Pilihan'
+					m \li.grey.lighten-2, m \a.center, m \b, 'Daftar Tabel'
 					tabel.find!fetch!map (i) ->
 						m \li, m \a.center,
 							href: "/tabel/#{i.idtabel}"
