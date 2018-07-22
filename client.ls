@@ -9,11 +9,15 @@ if Meteor.isClient
 						m \li, m \a, \Login
 				m \ul.fixed.side-nav,
 					m \li.grey.lighten-2, m \a.center, m \b, 'Daftar Tabel'
+					m \li, m \a,
+						href: '/tabel'
+						oncreate: m.route.link
+						m \span, 'Semua Tabel'
 					tabel.find!fetch!map (i) ->
-						m \li, m \a.center,
+						m \li, m \a,
 							href: "/tabel/#{i.idtabel}"
 							oncreate: m.route.link
-							m \b, i.title.substring 0, 27
+							m \b, i.title.substring 0, 32
 				m \div, style: "padding-left: 160px",
 					m content
 
@@ -32,27 +36,21 @@ if Meteor.isClient
 				m \.btn, m \input,
 					type: \file name: \Upload, onchange: fileInput
 
-		semua: ->
-			view: -> m \.container,
-				tabel.find!fetch!map (i) -> m \div,
-					m \h5, i.title
+		tabel: ->
+			view: ->
+				datas =
+					if m.route.param \idtabel
+						[tabel.findOne idtabel: that]
+					else tabel.find!fetch!
+				m \.container, datas.map (i) ->
+					m \h4, i.title
 					m \table,
 						m \tr, i.header.map (j) -> m \th, j
 						i.rows.map (j) ->
 							m \tr, j.map (k) -> m \td, k
 
-		tabel: ->
-			view: ->
-				found = tabel.findOne idtabel: m.route.param \idtabel
-				m \.container,
-					m \h4, found.title
-					m \table,
-						m \tr, found.header.map (i) -> m \th, i
-						found.rows.map (i) ->
-							m \tr, i.map (j) -> m \td, j
-
 	Meteor.subscribe \tabel, onReady: ->
 		m.route document.body, \/semua,
-			'/semua': comp.layout comp.semua
-			'/unggah': comp.layout comp.unggah
+			'/tabel': comp.layout comp.tabel
 			'/tabel/:idtabel': comp.layout comp.tabel
+			'/unggah': comp.layout comp.unggah
